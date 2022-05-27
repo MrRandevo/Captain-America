@@ -1,50 +1,50 @@
-#include "WonderWoman.h"
+#include "Aquaman.h"
 #include "Board.h"
-WonderWoman::WonderWoman(Board* FBoard)
+Aquaman::~Aquaman()
+{
+	 
+}
+
+Aquaman::Aquaman(Board* FBoard)
 	:Hero(FBoard)
 {
-	this->setAttributes(100, 30, 0.4);
+	this->setAttributes(100, 40, 0.3);
 	this->changeStats(40, 1);
 
 	do
 	{
 		m_targetPosition = RandomPointInRange(this->getCoordinates(),
-									          m_maxStraightMove);
+			m_maxStraightMove);
 
 	} while ((m_targetPosition.Coordinate_X < 10)
 		|| (m_targetPosition.Coordinate_X > 980)
 		|| (m_targetPosition.Coordinate_Y < 10)
 		|| (m_targetPosition.Coordinate_Y > 580));
 
-	enemy = false; 
+	enemy = false;
 	foe = NULL;
 }
 
-WonderWoman::~WonderWoman()
+void Aquaman::skill()
 {
 }
 
-void WonderWoman::skill()
+void Aquaman::update(const float& dt)
 {
-	 
-}
-
-void WonderWoman::update(const float& dt)
-{	
 	this->elapsed2 = dt;
 	float sub_dt = elapsed2 - elapsed1;
 	float tem = this->getStats().speed_attack;
- 
+
 	if (enemy == true && sub_dt > tem)
 	{
-		std::cout << std::endl << "Atak Wonderwoman";
+		std::cout << std::endl << "Atak Aquamana";
 		this->attack(foe);
 		this->elapsed1 = dt;
 	}
 	else if (sub_dt < tem)
-	{
-		std::cout << std::endl << "War: " << sub_dt;
+	{ 
 	}
+
 	else if (obstacle == true && type == 0)
 	{
 		Vector2f temp = this->cords - this->prev_cords;
@@ -56,17 +56,16 @@ void WonderWoman::update(const float& dt)
 	{
 		if (obstacle == true && type == 1)
 		{
-			this->changeSpeed(0.5);
+			this->changeSpeed(2);
 			this->move();
-			this->changeSpeed(2); 
-		}
+			this->changeSpeed(0.5);
 
+		}
 		else
 		{
 			this->move();
 		}
-	}
-
+	} 
 	enemy = false;
 	obstacle = false;
 	type = 0;

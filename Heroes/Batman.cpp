@@ -51,7 +51,7 @@ void Batman::update(const float& dt)
 	else if (obstacle == true && type == 0)
 	{
 		Vector2f temp = this->cords - this->prev_cords;
-		temp = temp * 2;
+		temp = temp * 4;
 		this->setCoordinates((cords.Coordinate_X - temp.Coordinate_X), (cords.Coordinate_Y - temp.Coordinate_Y));
 		this->m_targetPosition = this->getCoordinates();
 

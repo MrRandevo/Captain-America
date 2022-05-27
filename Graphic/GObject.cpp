@@ -1,15 +1,25 @@
 #include "GObject.h"
 
  
+void GObject::initFonts()
+{ 
+	if (!this->font.loadFromFile("Fonts\\arial.ttf"))
+	{
+			std::cout << "Could not load";
+	} 
+}
+
 GObject::GObject(Object* object)
 {
-	this->object = object;
-	health.setFillColor(sf::Color::Magenta);
-	health.setSize(sf::Vector2f(2, 2));
+	this->object = object; 
+	this->health.setSize(sf::Vector2f(25, 4));
+	this->health.setOrigin(sf::Vector2f(10,23));
+	 
 }
 
 GObject::~GObject()
 {
+	 
 }
 
  
@@ -28,40 +38,21 @@ sf::Sprite GObject::Graphic(std::string a )
 
 	return sprite; 
 }
- 
-
-//bool GObject::updateCollision(GObject* Gobj)
-//{
-//	sf::FloatRect HeroBounds = this->collision.getGlobalBounds();
-//	sf::FloatRect OtherBounds = Gobj->collision.getGlobalBounds();
-//	 
-//	if (HeroBounds.left - 0.5 >= (OtherBounds.left + OtherBounds.width) ||
-//		OtherBounds.left - 0.5 >= (HeroBounds.left + HeroBounds.width))
-//	{
-//		return false; 
-//	}  
-//
-//	if (HeroBounds.top - 0.5 >= (OtherBounds.top + OtherBounds.height) ||
-//		OtherBounds.top - 0.5 >= (HeroBounds.top + HeroBounds.height))
-//	{
-//		return false;
-//	}
-//	 
-//	return true;
-//} 
- 
+  
 void GObject::update(const float& dt)
 {
 	rect.setPosition(sf::Vector2f(object->getCoordinates().Coordinate_X, 
-								  object->getCoordinates().Coordinate_Y));
+								  object->getCoordinates().Coordinate_Y)); 
 	 
-
-	circle.setPosition(sf::Vector2f(object->getCoordinates().Coordinate_X,
-								    object->getCoordinates().Coordinate_Y));
 
 	health.setPosition(sf::Vector2f(object->getCoordinates().Coordinate_X,
 									object->getCoordinates().Coordinate_Y));
 
 	sprite.setPosition(sf::Vector2f(object->getCoordinates().Coordinate_X,
 								    object->getCoordinates().Coordinate_Y));
+
+	text.setPosition(sf::Vector2f(object->getCoordinates().Coordinate_X,
+									object->getCoordinates().Coordinate_Y));
+	float temp = object->getAttributes().health;
+	health.setSize(sf::Vector2f(((temp/100.0) * 25), 4));
 }

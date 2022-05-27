@@ -38,16 +38,6 @@ void Superman::update(const float& dt)
 	float sub_dt = elapsed2 - elapsed1;
 	float tem = this->getStats().speed_attack;
 	
-	/*for(int i=0;i<FBoard->Map->Obj.size();i++)
-	{
-		if(checkAround(FBoard->Map->Obj[i]))
-		{
-				this->FBoard->Map->Gobj.erase(this->FBoard->Map->Gobj.begin() + i);
-				this->FBoard->Map->Obj.erase(this->FBoard->Map->Obj.begin() + i);
-				break;
-				std::cout << std::endl << "Kolizja";
-		}
-	} */
 	
 	if (enemy == true && sub_dt > tem)
 	{
@@ -57,17 +47,19 @@ void Superman::update(const float& dt)
 	}
 	else if (enemy == true && sub_dt < tem)
 	{
-		std::cout << std::endl << "War: " << sub_dt;
+		 
 	}
 
-	else if (obstacle == true && type == 0 )
-	{
-		Vector2f temp = this->cords - this->prev_cords;
-		temp = temp * 2; 
-		this->setCoordinates((cords.Coordinate_X - temp.Coordinate_X),(cords.Coordinate_Y - temp.Coordinate_Y)); 
-		this->m_targetPosition = this->getCoordinates(); 
+	else if (obstacle == true && type == 0 && sub_dt < tem)
+	{  
 	}
-	 
+	else if (obstacle == true && type == 0 && sub_dt > tem)
+	{
+		this->FBoard->Map->Gobj.erase(this->FBoard->Map->Gobj.begin() + collision);
+		this->FBoard->Map->Obj.erase(this->FBoard->Map->Obj.begin() + collision);
+		this->collision = NULL;
+		this->elapsed1 = dt;
+	}
 	else
 	{
 		if (obstacle == true && type == 1)

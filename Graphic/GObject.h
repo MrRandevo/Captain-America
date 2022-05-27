@@ -9,20 +9,26 @@ private:
 protected:
 	sf::Texture texture;
 	sf::Image image; 
+	sf::Font font;
+	sf::Text text;
 	sf::RectangleShape rect;
 	sf::Sprite sprite;
 
 	//sf::RectangleShape collision;
 	sf::CircleShape circle;
-	sf::RectangleShape health; 
+	  
 
 	Object* object;
+
+
+	void initFonts();
 public: 
 //Konstruktor
-	GObject(Object * object);
-
+	GObject(Object * object); 
 //Destruktor
-	~GObject();
+	~GObject(); 
+
+	sf::RectangleShape health;
 
 //Metody:
 	virtual void draw(sf::RenderTarget* target) = 0;
