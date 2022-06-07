@@ -3,6 +3,9 @@
 #include <string>
 #include <ctime>
 #include <ctime>
+#include "AStar.h"
+ 
+enum Hero_states { HRO_IDLE = 0, HRO_MOVE, HRO_ATTACK, HRO_SKILL };
 
 struct statistics
 {
@@ -18,9 +21,16 @@ private:
     statistics stats;
 
 protected: 
-//Atrybuty:
-    float m_maxStraightMove; 
+//Atrybuty: 
 public:
+//Atrybuty: 
+    std::vector <Node> path;
+    AStar* Star;
+    float elapsed1;
+    float elapsed2;
+    float skill1;
+    float skill2;
+    short unsigned HeroState;
 //Konstruktor
     Hero(Board* FBoard);
 
@@ -37,17 +47,13 @@ public:
 
 
     //Ruch
-    void move();
+    void move(Vector2f& originPosition);
 
+    //Znajdowanie sciezki
+    void findPath();
+    void randomCoords();
     //Atak
     void attack(Object* enemy);
-
-    bool MoveTowards(Vector2f& originPosition, Vector2f targetPosition, Vector2f &prev_cords, float Distance);
-
-    Vector2f RandomPointInRange(Vector2f origin, float range);
-
-    float randomFrom0To1();
      
-
 };
 

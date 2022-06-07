@@ -1,6 +1,5 @@
 #include "Game.h"
- 
- 
+  
  //Inicjalizacja okna
 void Game::initWindow()
 {
@@ -13,8 +12,7 @@ void Game::initWindow()
 //Inicjalizacja stanów programu
 void Game::initStates()
 {
-	  states.push(new MainMenu (this->window,&this->states));
-
+	  states.push(new MainMenu (this->window,&this->states)); 
 }
  
 //Konstruktor

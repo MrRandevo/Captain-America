@@ -2,6 +2,7 @@
 #include "MainMenu.h"
 #include "Board.h"
 
+//Konstruktor 
 ChooseTeam::ChooseTeam(sf::RenderWindow* window, std::stack <State*>* states)
 	:State(window, states)
 {
@@ -12,6 +13,7 @@ ChooseTeam::ChooseTeam(sf::RenderWindow* window, std::stack <State*>* states)
 	this->initImages(); 
 }
 
+//Destruktor
 ChooseTeam::~ChooseTeam()
 {
 	auto i = this->buttons.begin();
@@ -33,6 +35,7 @@ ChooseTeam::~ChooseTeam()
 	}
 }
 
+//£adowanie czcionki
 void ChooseTeam::initFonts()
 {
 	if (!this->font.loadFromFile("Fonts\\arial.ttf"))
@@ -41,6 +44,7 @@ void ChooseTeam::initFonts()
 	}
 }
 
+//Inicjalizacja przyciskow
 void ChooseTeam::initButtons()
 {
 	this->buttons["ZATWIERDZ"] = new Button(840, 550, 140, 40, &font, "ZATWIERDZ",
@@ -54,6 +58,7 @@ void ChooseTeam::initButtons()
 		sf::Color(20, 20, 20, 200)); 
 }
 
+//Inicjalizacja obrazow
 void ChooseTeam::initImages()
 {  
 	 
@@ -82,6 +87,7 @@ void ChooseTeam::initImages()
 	this->imags["Team2d"] = new Images(610, 450, 90, 120, texture);
 }
 
+//Inicjalizacja tekstu
 void ChooseTeam::initText()
 {
 	this->text1.setString("Heroes");
@@ -105,6 +111,7 @@ void ChooseTeam::initText()
 	this->text4.setPosition(160, 500);
 }
 
+//Wczytywanie tekstur
 void ChooseTeam::initTextures()
 {
 	this->Textures["Batman"] = new sf::Texture();
@@ -165,15 +172,17 @@ void ChooseTeam::update(const float& dt)
 	this->updateButtons();
 	this->updateImages(); 
 
+	// Po wcisnieciu przycisku, jesli druzyna zostala wybrana, gra zmienia stan na Plansze
 	if (this->buttons["ZATWIERDZ"]->isPressed())
 	{
-		/*if (name.size()==8)
-		{*/
+		if (name.size() == 8)
+		{
 			this->states->pop();
 			this->states->push(new Board(this->window, this->states));
-		/*}*/
+		}
 	}
 
+	// Po wcisnieciu przycisku, wracamy do Menu glownego
 	if (this->buttons["WROC"]->isPressed())
 	{
 		this->states->pop();
@@ -181,6 +190,8 @@ void ChooseTeam::update(const float& dt)
 		this->name.clear();
 	}
 
+
+	//Jesli, ktorys z przyciskow zostal wcisniety to bohaterzy sa zapisywani do gry
 	if (name.size() < 8)
 	{
 		if (this->imags["Batman"]->isPressed())

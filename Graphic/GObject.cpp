@@ -13,13 +13,12 @@ GObject::GObject(Object* object)
 {
 	this->object = object; 
 	this->health.setSize(sf::Vector2f(25, 4));
-	this->health.setOrigin(sf::Vector2f(10,23));
+	this->health.setOrigin(sf::Vector2f(10,26));
 	 
 }
 
 GObject::~GObject()
-{
-	 
+{ 
 }
 
  
@@ -56,3 +55,8 @@ void GObject::update(const float& dt)
 	float temp = object->getAttributes().health;
 	health.setSize(sf::Vector2f(((temp/100.0) * 25), 4));
 }
+
+//void GObject::createAnimationComponent(sf::Sprite& sprite,sf::Texture& texture_sheet)
+//{
+//	this->animationComponent = new AnimationComponent(sprite, texture_sheet);
+//}

@@ -8,31 +8,32 @@ Aquaman::~Aquaman()
 Aquaman::Aquaman(Board* FBoard)
 	:Hero(FBoard)
 {
-	this->setAttributes(100, 40, 0.3);
+	Star = new AStar(FBoard);
+
+	Star->player.x = 0;
+	Star->player.y = 0;
+	Star->dest.x = 0;
+	Star->dest.y = 0;
+
+	this->setAttributes(100, 40, 0.35);
 	this->changeStats(40, 1);
-
-	do
-	{
-		m_targetPosition = RandomPointInRange(this->getCoordinates(),
-			m_maxStraightMove);
-
-	} while ((m_targetPosition.Coordinate_X < 10)
-		|| (m_targetPosition.Coordinate_X > 980)
-		|| (m_targetPosition.Coordinate_Y < 10)
-		|| (m_targetPosition.Coordinate_Y > 580));
-
+	 
 	enemy = false;
+	obstacle = false;
+	skill_help = NULL;
 	foe = NULL;
 }
-
 void Aquaman::skill()
 {
+	this->changeHP(-10);
 }
 
 void Aquaman::update(const float& dt)
 {
 	this->elapsed2 = dt;
+	this->skill2 = dt;
 	float sub_dt = elapsed2 - elapsed1;
+	float skill_dt = skill2 - skill1;
 	float tem = this->getStats().speed_attack;
 
 	if (enemy == true && sub_dt > tem)
@@ -41,32 +42,29 @@ void Aquaman::update(const float& dt)
 		this->attack(foe);
 		this->elapsed1 = dt;
 	}
-	else if (sub_dt < tem)
+	else if ((enemy == true && sub_dt < tem) )
 	{ 
 	}
 
-	else if (obstacle == true && type == 0)
+	else if (type == OBJ_WATER && skill_dt > 10)
 	{
-		Vector2f temp = this->cords - this->prev_cords;
-		temp = temp * 4;
-		this->setCoordinates((cords.Coordinate_X - temp.Coordinate_X), (cords.Coordinate_Y - temp.Coordinate_Y));
-		this->m_targetPosition = this->getCoordinates(); 
+		this->skill();
+		this->skill1 = dt;
 	}
+	 
 	else
 	{
-		if (obstacle == true && type == 1)
+		if ( type == OBJ_WATER)
 		{
-			this->changeSpeed(2);
-			this->move();
-			this->changeSpeed(0.5);
-
+			this->changeSpeed(1.6);
+			this->move(cords);
+			this->changeSpeed(0.625); 
 		}
 		else
 		{
-			this->move();
+			this->move(cords);
 		}
 	} 
-	enemy = false;
-	obstacle = false;
-	type = 0;
+	enemy = false; 
+	type = OBJ_NONE;
 }

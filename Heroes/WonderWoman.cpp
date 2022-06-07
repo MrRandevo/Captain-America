@@ -3,20 +3,18 @@
 WonderWoman::WonderWoman(Board* FBoard)
 	:Hero(FBoard)
 {
+	Star = new AStar(FBoard);
+
+	Star->player.x = 0;
+	Star->player.y = 0;
+	Star->dest.x = 0;
+	Star->dest.y = 0;
+
 	this->setAttributes(100, 30, 0.4);
 	this->changeStats(40, 1);
-
-	do
-	{
-		m_targetPosition = RandomPointInRange(this->getCoordinates(),
-									          m_maxStraightMove);
-
-	} while ((m_targetPosition.Coordinate_X < 10)
-		|| (m_targetPosition.Coordinate_X > 980)
-		|| (m_targetPosition.Coordinate_Y < 10)
-		|| (m_targetPosition.Coordinate_Y > 580));
-
-	enemy = false; 
+	enemy = false;
+	obstacle = false;
+	skill_help = NULL;
 	foe = NULL;
 }
 
@@ -42,32 +40,24 @@ void WonderWoman::update(const float& dt)
 		this->elapsed1 = dt;
 	}
 	else if (sub_dt < tem)
-	{
-		std::cout << std::endl << "War: " << sub_dt;
+	{ 
 	}
-	else if (obstacle == true && type == 0)
-	{
-		Vector2f temp = this->cords - this->prev_cords;
-		temp = temp * 4;
-		this->setCoordinates((cords.Coordinate_X - temp.Coordinate_X), (cords.Coordinate_Y - temp.Coordinate_Y));
-		this->m_targetPosition = this->getCoordinates(); 
-	}
+	 
 	else
 	{
-		if (obstacle == true && type == 1)
+		if ( type == OBJ_WATER)
 		{
 			this->changeSpeed(0.5);
-			this->move();
+			this->move(cords);
 			this->changeSpeed(2); 
 		}
 
 		else
 		{
-			this->move();
+			this->move(cords);
 		}
 	}
 
-	enemy = false;
-	obstacle = false;
-	type = 0;
+	enemy = false; 
+	type = OBJ_NONE;
 }

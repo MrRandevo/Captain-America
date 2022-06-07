@@ -38,6 +38,8 @@ MainMenu::MainMenu(sf::RenderWindow* window, std::stack <State*>* states)
 //Destruktor
 MainMenu::~MainMenu()
 {
+	//Usuwanie przyciskow
+
 	auto it = this->buttons.begin();
 	for (it = buttons.begin(); it != this->buttons.end(); ++it)
 	{
@@ -45,26 +47,26 @@ MainMenu::~MainMenu()
 	}
 }
   
-//Aktualizacja obiektu
+ 
 void MainMenu::update(const float& dt)
 { 
 	this->updateMousePosition();
 	this->updateButtons(); 
 
-	//Wybierz druzyne
+	// Po wcisnieciup przycisku, gra zmienia stan na ChooseTeam
 	if (this->buttons["START"]->isPressed())
 	{
 		this->states->pop();
 		this->states->push(new ChooseTeam(this->window,this->states));
 	} 
-	//Opusc gre
+	//Po wcisnieciu gra sie wylacza
 	if (this->buttons["EXIT"]->isPressed())
 	{
 		this->quit = true;
 	} 
 }
 
-//Drukowanie na ekran
+ 
 void MainMenu::render(sf::RenderTarget* target)
 {
 	if (!target)
@@ -74,7 +76,7 @@ void MainMenu::render(sf::RenderTarget* target)
 	this->renderButtons(target);
 }
 
-//Aktualizacja przyciskow
+ 
 void MainMenu::updateButtons()
 {
 	for (auto& it : this->buttons)
@@ -82,8 +84,7 @@ void MainMenu::updateButtons()
 		it.second->update(this->mousePosView);
 	}
 }
-
-//Drukowanie przyciskow
+ 
 void MainMenu::renderButtons(sf::RenderTarget* target)
 {
 	for (auto& it : this->buttons)

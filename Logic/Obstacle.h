@@ -6,9 +6,7 @@ class Obstacle :
 private:
 
 protected:
-    bool isDestroyed;
-
-
+     
 public:
     //Konstruktor
     Obstacle(float pos_x, float pos_y, Board* FBoard);
@@ -17,7 +15,7 @@ public:
     ~Obstacle();
 
 //Atrybuty:
-     
+    bool isDestroyed;
 //Metody:
     void update(const float& dt) ;
      

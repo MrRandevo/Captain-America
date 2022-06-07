@@ -3,6 +3,8 @@
 class Board;
 #include "Button.h"
 
+enum Objects_types { OBJ_NONE = 0, OBJ_WATER, OBJ_HEAL, OBJ_OBSTACLE, OBJ_BOMB };
+
 struct Vector2f
 {
 	float Coordinate_X;
@@ -34,25 +36,25 @@ struct defence
 class Object //Byt czyli wszyscy bohaterowie i zloczyncy
 {
 private:
-	  
+	defence attributes; 
 protected: 
 	Vector2f cords;  
-	defence attributes;
-	 
 
 public:
-	//Atrybuty:
-	Vector2f m_targetPosition; 
-	Vector2f prev_cords;
+//Atrybuty: 
+	//Czy obok jest wrog?
 	bool enemy;
+	//Czy przeszkoda jest obok
 	bool obstacle;
+	//Ktora druzyna
 	bool Team;
-	float elapsed1;
-	float elapsed2;
-	Object* foe; 
-	Object* collision;
-	Board* FBoard;
-	int type;
+	//Rodzaj przeszkody
+	short unsigned type;
+	// 
+	int skill_help;
+
+	Object* foe;  
+	Board* FBoard; 
 
 //Konstruktor
 	Object(Board* FBoard);

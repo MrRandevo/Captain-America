@@ -1,10 +1,12 @@
 #pragma once
 #include "Hero.h"
+#include "AStar.h"
+
 class Superman :
     public Hero
 {
 private:
-
+     
 protected:
 
 public:

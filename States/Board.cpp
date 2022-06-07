@@ -1,5 +1,6 @@
 #include "Board.h"
 #include "Object.h"
+#include "MainMenu.h"
 
 void Board::initFonts()
 {
@@ -9,6 +10,15 @@ void Board::initFonts()
 	} 
 }
 
+//void Board::initTextures()
+//{
+//	this->Textures["GreenArrowSheet"] = new sf::Texture();
+//	Textures["GreenArrowSheet"]->loadFromFile("Sprite\\GreenArrowSheet.png");
+//
+//	this->Textures["BatmanWalk"] = new sf::Texture();
+//	Textures["BatmanWalk"]->loadFromFile("Sprite\\BatmanFight.png");
+//}
+
 void Board::initHeroes()
 {
 	int i = 0;
@@ -17,8 +27,7 @@ void Board::initHeroes()
 		if (it == "Batman")
 		{
 			Objects.push_back(new Batman(this));
-			GObjects.push_back(new GBatman(Objects[i]));
-
+			GObjects.push_back(new GBatman(Objects[i])); 
 		}
 
 		if (it == "Superman")
@@ -32,53 +41,60 @@ void Board::initHeroes()
 			Objects.push_back(new WonderWoman(this));
 			GObjects.push_back(new GWonderWoman(Objects[i]));
 		}
-		/*
+		 
 		if (it == "Aquaman")
 		{
-			Objects.push_back(new Aquaman());
+			Objects.push_back(new Aquaman(this));
 			GObjects.push_back(new GAquaman(Objects[i]));
 		}
+		 
 		if (it == "Flash")
 		{
-			Objects.push_back(new Flash());
+			Objects.push_back(new Flash(this));
 			GObjects.push_back(new GFlash(Objects[i]));
 		}
+		 
 		if (it == "GreenArrow")
 		{
-			Objects.push_back(new GreenArrow());
-			GObjects.push_back(new GGreenArrow(Objects[i]));
-		}
-		if (it == "Darkseid")
-		{
-			Objects.push_back(new Darkseid());
-			GObjects.push_back(new GDarkseid(Objects[i]));
-		}
-		if (it == "CaptainCold")
-		{
-			Objects.push_back(new CaptainCold());
-			GObjects.push_back(new GCaptainCold(Objects[i]));
-		}
-		if (it == "Deathstroke")
-		{
-			Objects.push_back(new Deathstroke());
-			GObjects.push_back(new GDeathstroke(Objects[i]));
-		}
+			Objects.push_back(new GreenArrow(this));
+			GObjects.push_back(new GGreenArrow( Objects[i] ));
+		} 
+
 		if (it == "Joker")
 		{
-			Objects.push_back(new Joker());
+			Objects.push_back(new Joker(this));
 			GObjects.push_back(new GJoker(Objects[i]));
 		}
+		 
+		if (it == "Darkseid")
+		{
+			Objects.push_back(new Darkseid(this));
+			GObjects.push_back(new GDarkseid(Objects[i]));
+		}
+		 
+		if (it == "CaptainCold")
+		{
+			Objects.push_back(new CaptainCold(this));
+			GObjects.push_back(new GCaptainCold(Objects[i]));
+		}
+		 
+		if (it == "Deathstroke")
+		{
+			Objects.push_back(new Deathstroke(this));
+			GObjects.push_back(new GDeathstroke(Objects[i]));
+		} 
+		
 		if (it == "LexLuthor")
 		{
-			Objects.push_back(new LexLuthor());
+			Objects.push_back(new LexLuthor(this));
 			GObjects.push_back(new GLexLuthor(Objects[i]));
 		}
 		if (it == "PoisonIvy")
 		{
-			Objects.push_back(new PoisonIvy());
+			Objects.push_back(new PoisonIvy(this));
 			GObjects.push_back(new GPoisonIvy(Objects[i]));
 		}
-		*/
+		
 		i++; 
 	}
 
@@ -86,25 +102,28 @@ void Board::initHeroes()
 	{
 		if (k < 4)
 		{
-			Objects[k]->setCoordinates(30, 50 + (k * 120));
+			Objects[k]->setCoordinates(0, 1+2*k);
 			Objects[k]->Team = true;
+			GObjects[k]->health.setFillColor(sf::Color::Red);
 		}
 
 		if (k > 3)
 		{
-			Objects[k]->setCoordinates(900, 50 + ((k - 4) * 120));
+			Objects[k]->setCoordinates(19, 1+2*(k-4));
 			Objects[k]->Team = false;
+			GObjects[k]->health.setFillColor(sf::Color::Blue);
 		}
 	}
 }
 
 Board::Board(sf::RenderWindow* window, std::stack<State*>* states)
 	:State(window, states)
-{ 
-	this->Map = new TileMap(this);
-	 
+{  
 	this->initFonts();  
+	//this->initTextures();
 	this->initHeroes();	
+
+	this->Map = new TileMap(this);
 	
 }
 
@@ -114,12 +133,19 @@ Board::~Board()
 	GObjects.clear();
 	Map = NULL;
 	delete Map;
+
+	auto it = this->Textures.begin();
+	for (it = Textures.begin(); it != this->Textures.end(); ++it)
+	{
+		delete it->second;
+	}
 }
  
 void Board::update(const float& dt)
 { 
 	this->updateHeroes(dt);
 	this->updateMap(dt);
+	this->checkForEnd();
 } 
 
 void Board::render(sf::RenderTarget* target)
@@ -145,7 +171,7 @@ void Board::updateHeroes(const float& dt)
 		{ 
 			if ((i != j) && (Objects[i]->Team != Objects[j]->Team))
 			{
-				Objects[i]->enemy = Objects[i]->SomethingIsNear(Objects[j], 50.0); 
+				Objects[i]->enemy = Objects[i]->SomethingIsNear(Objects[j], 60.0); 
 				if (Objects[i]->enemy == true)
 				{
 					Objects[i]->foe = Objects[j];
@@ -167,4 +193,34 @@ void Board::renderHeroes(sf::RenderTarget* target)
 void Board::updateMap(const float& dt)
 {
 	this->Map->update(dt);
+}
+
+void Board::checkForEnd()
+{
+	int licz1 = 0;
+	int licz2 = 0;
+	for (int i = 0; i < Objects.size(); i++)
+	{
+		if (Objects[i]->Team == true)
+		{
+			licz1++;
+		}
+		if (Objects[i]->Team == false)
+		{
+			licz2++;
+		}
+
+	}
+
+	if ((licz1 == 0) || (licz2 == 0) )
+	{ 
+		sf::Clock clk;
+		float delta = clk.getElapsedTime().asSeconds();
+		while (delta < 3.0)
+		{
+			delta = clk.getElapsedTime().asSeconds();
+		}
+		this->states->pop();
+		this->states->push(new MainMenu(this->window, this->states));
+	} 
 }

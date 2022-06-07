@@ -1,18 +1,28 @@
 #include "TileMap.h"
 #include "Board.h"
 #include "Obstacle.h"
+#include "Heal.h"
 
 TileMap::TileMap(Board* FBoard)
 {
     this->FBoard = FBoard;
+    this->maxSize_x = 20;
+    this->maxSize_y = 12;
+    this->gridSize = 50;
     this->initTextures(); 
     this->initObjects();
+ 
 }
 
 TileMap::~TileMap()
 {
-    counter = NULL;
-    delete counter;
+    delete[] temp;
+
+    for (int i = 0; i < maxSize_x; i++)
+    {
+        delete[]counter[i];
+    }
+    delete[] counter;     
 
     Obj.clear();
     Gobj.clear();
@@ -64,29 +74,37 @@ void TileMap::initTextures()
     this->Textures["BlueTree"] = new sf::Texture();
     Textures["BlueTree"]->loadFromFile("Sprite\\BlueTree.png");
 
+    this->Textures["Heal"] = new sf::Texture();
+    Textures["Heal"]->loadFromFile("Sprite\\Heal.png");
+
 }
 
 void TileMap::initObjects()
-{
-    this->maxSize_x = 20;
-    this->maxSize_y = 12;
-    this->gridSize = 50;
+{ 
 
-    counter = new int[maxSize_x * maxSize_y]
+    counter = new int* [maxSize_x];
+    for (int i = 0; i < maxSize_x; i++)
     {
-     0, 0, 0, 0, 0, 0, 4, 0, 0, 5, 0, 0, 0, 1, 0, 0, 3, 2, 0, 0, 
-     0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 2, 2, 0, 0, 
-     0, 0, 1, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 0, 0, 0,
-     0, 0, 1, 2, 2, 2, 1, 2, 2, 0, 5, 3, 0, 0, 0, 3, 0, 0, 0, 0, 
-     0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0,
-     0, 0, 0, 0, 0, 2, 5, 5, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 
-     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-     0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 1, 0, 0,
-     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 2, 0, 0, 0, 0, 0,
-     0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-     0, 0, 1, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 
-     0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0,
+        counter[i] = new int[maxSize_y];
+    }
+
+    temp = new int[maxSize_x * maxSize_y] 
+    {
+        2, 2, 2, 2, 0, 0, 4, 0, 0, 5, 0, 0, 0, 1, 0, 0, 2, 2, 2, 2,
+        2, 2, 2, 0, 0, 2, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 2, 2, 2,
+        2, 2, 0, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2, 2,
+        2, 0, 1, 2, 2, 2, 1, 2, 2, 0, 5, 3, 2, 0, 0, 3, 0, 0, 0, 2,
+        0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 4, 2, 2, 2, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 2, 5, 5, 0, 0, 2, 2, 0, 2, 0, 6, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0,
+        2, 0, 0, 6, 0, 0, 4, 0, 0, 1, 1, 0, 0, 0, 2, 0, 0, 0, 0, 2,
+        2, 2, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 2, 2,
+        2, 2, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 2, 2, 2,
+        2, 2, 2, 2, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 2,
     };
+
+
 
     int count = 0;
     for (int x = 0; x < maxSize_x; x++)
@@ -95,40 +113,47 @@ void TileMap::initObjects()
 
         for (int y = 0; y < maxSize_y; y++)
         {
+            this->counter[x][y] = temp[20 * y + x];
+
             this->map[x].push_back(sf::RectangleShape());
 
             this->map[x][y].setPosition(sf::Vector2f(gridSize * x, gridSize * y));
             this->map[x][y].setSize(sf::Vector2f(50, 50));
             this->map[x][y].setTexture(Textures["Grass"]);
 
-            switch (counter[20 * y + x])
+            switch (counter[x][y])
             {
             case 0:
                 break;
             case 1:
-                Obj.push_back(new Obstacle((50 * x)+25, (50 * y) + 25, FBoard));
+                Obj.push_back(new Obstacle(x, y, FBoard));
                 Gobj.push_back(new GObstacle(Obj[count], Textures["Rock"]));
                 count++;
                 break;
             case 2:
-                Obj.push_back(new Obstacle((50 * x) + 25, (50 * y) + 25, FBoard));
+                Obj.push_back(new Obstacle(x, y, FBoard));
                 Gobj.push_back(new GObstacle(Obj[count], Textures["Water"]));
-                Obj[count]->type = 1; 
+                Obj[count]->type = OBJ_WATER; 
                 count++;
                 break;
             case 3:
-                Obj.push_back(new Obstacle((50 * x) + 25, (50 * y) + 25, FBoard));
+                Obj.push_back(new Obstacle(x, y, FBoard));
                 Gobj.push_back(new GObstacle(Obj[count], Textures["GreenTree"]));
                 count++;
                 break;
             case 4:
-                Obj.push_back(new Obstacle((50 * x) + 25, (50 * y) + 25, FBoard));
+                Obj.push_back(new Obstacle(x, y, FBoard));
                 Gobj.push_back(new GObstacle(Obj[count], Textures["BrownTree"]));
                 count++;
                 break;
             case 5:
-                Obj.push_back(new Obstacle((50 * x) + 25, (50 * y) + 25, FBoard));
+                Obj.push_back(new Obstacle(x, y, FBoard));
                 Gobj.push_back(new GObstacle(Obj[count], Textures["BlueTree"]));
+                count++;
+                break;
+            case 6:
+                Obj.push_back(new Heal(x, y, FBoard));
+                Gobj.push_back(new GHeal(Obj[count], Textures["Heal"]));
                 count++;
                 break;
             }
@@ -138,31 +163,39 @@ void TileMap::initObjects()
 
 void TileMap::update(const float& dt)
 {
+    int temp = -1;
     for (int i = 0; i < Obj.size(); i++)
     {
         for (int j = 0; j < FBoard->Objects.size(); j++)
         {
-            if (Obj[i]->SomethingIsNear(FBoard->Objects[j], 36.0))
-            { 
-                if (Obj[i]->type == 0)
+            if (Obj[i]->SomethingIsNear(FBoard->Objects[j], 36.0) == true)
+            {
+                if (Obj[i]->type == OBJ_OBSTACLE)
                 {
-                    FBoard->Objects[j]->collision = Obj[i];
-                    FBoard->Objects[j]->obstacle = true;
-                    FBoard->Objects[j]->type = 0;
+                    FBoard->Objects[j]->skill_help = i;
+                    FBoard->Objects[j]->type = OBJ_OBSTACLE;
                     break;
                 }
-
-                else
-                { 
-                    FBoard->Objects[j]->obstacle = true;
-                    FBoard->Objects[j]->type = 1; 
+                else if (Obj[i]->type == OBJ_HEAL)
+                {
+                    FBoard->Objects[j]->type = OBJ_HEAL;
+                    Obj[i]->foe = FBoard->Objects[j];
+                    temp = i;
                     break;
 
+                }
+                else
+                {
+                    FBoard->Objects[j]->type = OBJ_WATER;
+                    break;
                 }
             }
         }
         Obj[i]->update(dt);
-        
     }
-    
+    if (temp != -1)
+    {
+        this->Gobj.erase(this->Gobj.begin() + temp);
+        this->Obj.erase(this->Obj.begin() + temp);
+    }
 }

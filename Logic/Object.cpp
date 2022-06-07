@@ -43,10 +43,8 @@ float Vector2f::magnitude()
 
 Object::Object(Board* FBoard)
 {
-	this->FBoard = FBoard;
-	this->elapsed1 = 0;
-	this->elapsed2 = 0;
-	this->type = 0;
+	this->FBoard = FBoard; 
+	this->type = OBJ_NONE;
 }
   
 Object::~Object()
@@ -55,8 +53,8 @@ Object::~Object()
  
 void Object::setCoordinates(float x, float y)
 {
-	cords.Coordinate_X = x;
-	cords.Coordinate_Y = y;
+	cords.Coordinate_X = 25.0 + x * 50.0;
+	cords.Coordinate_Y = 25.0 + y * 50.0;
 }
 
 Vector2f Object::getCoordinates()
@@ -80,9 +78,7 @@ void Object::changeHP(float x)
 { 
 	this->attributes.health -= x;
 	if (attributes.health < 0)
-		attributes.health = 0;
-
-	
+		attributes.health = 0; 
 }
 
 void Object::changeSpeed(float x)

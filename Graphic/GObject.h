@@ -1,6 +1,6 @@
 #pragma once
 #include "Button.h"
-#include "Object.h"
+#include "Object.h" 
 
 class GObject
 {
@@ -13,13 +13,8 @@ protected:
 	sf::Text text;
 	sf::RectangleShape rect;
 	sf::Sprite sprite;
-
-	//sf::RectangleShape collision;
-	sf::CircleShape circle;
 	  
-
-	Object* object;
-
+	Object* object; 
 
 	void initFonts();
 public: 
@@ -34,9 +29,9 @@ public:
 	virtual void draw(sf::RenderTarget* target) = 0;
  
 	sf::Sprite Graphic(std::string a );
+	 
+	virtual void update(const float& dt); 
 
-	//bool updateCollision(GObject* Gobj);
-
-	void update(const float& dt); 
+	//void createAnimationComponent(sf::Sprite& sprite, sf::Texture& texture_sheet);
 };
 

@@ -2,6 +2,9 @@
 #include "Object.h"
 #include "Hero.h"
 
+// Klasa abstrakcyjna, która odpowiada za wyswietlanie tresci
+// oraz ulatwi przemieszczanie sie pomiedzy stanami graficznymi
+
 class State
 {
 protected:
@@ -9,6 +12,8 @@ protected:
 //Atrybuty:
 	sf::RenderWindow* window;
 	std::stack <State*>* states;
+
+	//Statyczny atrybut, zawieraj¹cy dodanych bohaterow do planszy
 	static std::vector<std::string> name; 
 
 	//Polozonie myszki
@@ -21,17 +26,19 @@ protected:
 
 public:
 
-//Konstruktor
+//Konstruktor:
 	State(sf::RenderWindow* window, std::stack <State*>* states);
 
-//Destruktor
+//Destruktor:
 	virtual ~State();
 
 //Atrybuty:
-	//zmienna do sprawdzania czy uzytkownik chce opuscic program
-	const bool& getQuit() const; 
+	 
 
 //Metody:  
+
+	// S³uzy do sprawdzania stanu zmiennej bool
+	const bool& getQuit() const;
 
 	//Aktualizacja pozycji myszki
 	virtual void updateMousePosition();

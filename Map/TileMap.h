@@ -2,6 +2,7 @@
 class Board;
 #include "GObject.h"
 #include "GObstacle.h"
+#include "GHeal.h"
 
  
 class TileMap 
@@ -15,7 +16,7 @@ private:
      
     int maxSize_x, maxSize_y;
     float gridSize;
-    int* counter;
+      
 
 //Metody:
     void initTextures();
@@ -33,6 +34,8 @@ public:
     Board * FBoard;
     std::vector<GObject*> Gobj;
     std::vector<Object*> Obj;
+    int** counter;
+    int* temp;
 //Metody:
     void render(sf::RenderTarget* target);   
     void update(const float& dt);

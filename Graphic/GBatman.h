@@ -6,15 +6,18 @@ class GBatman :
     public GObject
 {
 private:
-    
-protected:
-    
+     
+    sf::Texture bomb_texture;
+    sf::Sprite bomb_sprite;
+protected: 
 public:
-    GBatman(Object* object);
+    GBatman(Object* object );
 
     ~GBatman();
      
     void draw(sf::RenderTarget* target);
+
+    void update(const float& dt);
  
 };
 

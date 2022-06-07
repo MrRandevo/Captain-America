@@ -1,8 +1,9 @@
 #include "State.h"
 
-std::vector<std::string> State::name;
+// Inicjalizacja statycznego atrybutu
 
-//Konstruktor
+std::vector<std::string> State::name;
+ 
 State::State(sf::RenderWindow* window, std::stack <State*>* states)
 {
 	this->window = window;
@@ -10,18 +11,18 @@ State::State(sf::RenderWindow* window, std::stack <State*>* states)
 	this->quit = false;
 }
 
-//Destruktor
+ 
 State::~State()
 {
 }
 
-//zmienna do sprawdzania czy uzytkownik chce opuscic program
+ 
 const bool& State::getQuit() const
 {
 	return this->quit;
 }
  
-//Aktualizacja pozycji myszki
+
 void State::updateMousePosition()
 {
 	this->mousePosScreen = sf::Mouse::getPosition();
